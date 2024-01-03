@@ -48,6 +48,57 @@ function inRange(start = 0, end, step = 1, fn) {
   }
   return arr;
 }
+// --------------
+
+class SearchText{
+  constructor( Text ){
+      this.text = String(Text)
+  }
+  contains(...searchString){
+    searchString =searchString.flat()
+    let result = []
+    searchString.forEach(( str )=>{
+        result.push(this.text.includes(str))
+    })
+
+    return result.some((item) => item === true)
+  }
+
+  constainsAll(...searchString){
+    searchString = searchString.flat()
+
+    let result = []
+    searchString.forEach(( str )=>{
+        result.push(this.text.includes(str))
+    })
+
+    return result.every((item) => item === true)
+  }
+
+  startsWith(...searchString){
+    searchString = searchString.flat()
+
+    let result = []
+    searchString.forEach(( str )=>{
+        result.push(this.text.startsWith(str))
+    })
+
+    return result.some((item) => item === true)
+  }
+
+  endsWith(...searchString){
+    searchString = searchString.flat()
+
+    let result = []
+    searchString.forEach(( str )=>{
+        result.push(this.text.endsWith(str))
+    })
+
+    return result.some((item) => item === true)
+  }
+
+  
+}
 
 class Sql {
   constructor(array = []) {
@@ -117,6 +168,7 @@ class Sql {
   }
 
   orderBy(attr, order) {
+
     if (this.checkData() || this.checkResultLength()) {
       //console.error(new Error("Cannot procress data with length 0 in orderBY"))
       return false;
@@ -140,6 +192,7 @@ class Sql {
       if (order === "ASC") this.resultArray.sort(orderString.ASC);
       if (order === "DESC") this.resultArray.sort(orderString.DESC);
     }
+
   }
 
   groupBy(callback) {
@@ -209,6 +262,7 @@ class Sql {
   }
 
   //* Data Range Limit--------------------
+
   limit(limit) {
     this.resultArray = this.resultArray.slice(0, limit);
   }
@@ -216,14 +270,17 @@ class Sql {
   between(min, max) {
     this.resultArray = this.resultArray.slice(min, max);
   }
+
   top(limit) {
     this.resultArray = this.resultArray.slice(0, limit);
   }
+
   last(limit) {
     this.resultArray = this.resultArray.slice(
       this.resultArray.length - limit,
       this.resultArray.length
     );
+
   }
   //* ------------------- Utilities --------------------
 
@@ -406,7 +463,8 @@ class Sql {
 }
 
 let sql_test = new Sql(inventory);
-//sql_test.where(({ type }) => String(type) );
+sql_test.where(({ type }) => new SearchText( type ).startsWith('m') );
+
 sql_test.join(
   sales,
   (baseData, joinData) => {
@@ -416,9 +474,7 @@ sql_test.join(
 );
 
 sql_test.orderBy("id", "ASC");
-
 sql_test.select([{ name: "newName" },'type']);
-//sql_test.limit(1)
 
 //console.log(sql_test)
 //sql_test.groupBy(({ type }) => type);
@@ -430,8 +486,9 @@ sql_test.select([{ name: "newName" },'type']);
 console.log(sql_test);
 console.log("Data row(s) : " + sql_test.resultArray.length);
 
+
 /* console.log("sum",sql_test.sum('quantity')) */
 //console.log("max",sql_test.max('quantity'))
 //console.log("min",sql_test.min('quantity'))
 
-console.log("--------------");
+

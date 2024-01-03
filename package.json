@@ -7,6 +7,7 @@
     "sqljs": "bin/Sql.min.js"
   },
   "scripts": {
+    "dev" : "cd bin && nodemon sql.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
