@@ -106,7 +106,16 @@ class Sql {
     this._length = array.length;
 
     this.resultArray = array;
+    this.columns = []
+    
+
+    Object.keys(this.rawData[0]).map((item)=>{
+      this.columns.push(item)
+    })
+
   }
+
+  
 
   checkData() {
     if (this.rawData.length == 0) {
@@ -192,7 +201,6 @@ class Sql {
       if (order === "ASC") this.resultArray.sort(orderString.ASC);
       if (order === "DESC") this.resultArray.sort(orderString.DESC);
     }
-
   }
 
   groupBy(callback) {
@@ -463,32 +471,14 @@ class Sql {
 }
 
 let sql_test = new Sql(inventory);
-sql_test.where(({ type }) => new SearchText( type ).startsWith('m') );
 
-sql_test.join(
-  sales,
-  (baseData, joinData) => {
-    return baseData.id === joinData.productId;
-  },
-  "salse"
-);
-
-sql_test.orderBy("id", "ASC");
-sql_test.select([{ name: "newName" },'type']);
-
-//console.log(sql_test)
-//sql_test.groupBy(({ type }) => type);
-
-/* Object.keys(sql_test.resultArray[0]).map((item)=>{
-    console.log(new Sql(sql_test.resultArray[0][item]).sum('quantity'))
-}) */
+sql_test.in('type','meat','fruit')
+sql_test.groupBy(({type}) => type)
 
 console.log(sql_test);
-console.log("Data row(s) : " + sql_test.resultArray.length);
 
 
-/* console.log("sum",sql_test.sum('quantity')) */
-//console.log("max",sql_test.max('quantity'))
+
 //console.log("min",sql_test.min('quantity'))
 
 
