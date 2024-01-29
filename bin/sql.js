@@ -329,6 +329,14 @@ class Sql {
     let sum = 0;
     sum = this.resultArray.reduce((a, b) => a + Number(b[attr]), 0);
 
+    if(isNaN(sum)) {
+      let obj = {};
+      obj["sum_" + attr] = "Erorr";
+      this.resultArray = obj;
+
+      throw new Error("Can not sum the String")
+    }
+
     let obj = {};
     obj["sum_" + attr] = sum;
     this.resultArray = obj;
@@ -347,10 +355,12 @@ class Sql {
         let obj = {};
 
         this.resultArray[0][item].map((dataItem) => {
+
           if (max <= dataItem[attr]) {
             max = dataItem[attr];
             obj[item] = max;
           }
+
         });
         result.push(obj);
       });
@@ -472,8 +482,10 @@ class Sql {
 
 let sql_test = new Sql(inventory);
 
-sql_test.in('type','meat','fruit')
-sql_test.groupBy(({type}) => type)
+
+// Join 
+//sql_test.join(sales, (mainTable , joinTable) => mainTable.id === joinTable.productId , 'sale')
+
 
 console.log(sql_test);
 
